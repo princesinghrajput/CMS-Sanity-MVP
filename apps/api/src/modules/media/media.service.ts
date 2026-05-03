@@ -1,5 +1,6 @@
 import { mediaRepository } from "./media.repository.js";
 import { MediaStatus } from "../../database/entities/media.entity.js";
+import { AppError } from "../../common/errors/app.error.js";
 
 
 export const mediaService = {
@@ -23,12 +24,12 @@ export const mediaService = {
     async markProcessing(id: string){
         const media = await mediaRepository.findById(id)
         if(!media){
-            throw new Error("Media not found")
+            throw new AppError("Media not found",404)
         }
         
 
         if(media.status !== MediaStatus.PENDING){
-            throw new Error("Invalid state transition")
+            throw new AppError("Invalid state transition",409)
         }
 
         return mediaRepository.updateMedia(id,{
@@ -42,11 +43,11 @@ export const mediaService = {
 
         const media = await mediaRepository.findById(id)
         if(!media){
-            throw new Error("Media not found")
+            throw new AppError("Media not found",404)
         }
 
         if(media.status !== MediaStatus.PROCESSING){
-            throw new Error("Invalid state transition")
+            throw new AppError("Invalid state transition",409)
         }
 
         return mediaRepository.updateMedia(id,{
@@ -60,11 +61,11 @@ export const mediaService = {
 
         const media = await mediaRepository.findById(id)
         if(!media){
-            throw new Error("Media not found")
+            throw new AppError("Media not found",404)
         }
 
         if(media.status !== MediaStatus.PROCESSING){
-            throw new Error("Invalid state transition")
+            throw new AppError("Invalid state transition",409)
         }
 
         return mediaRepository.updateMedia(id,{
@@ -77,7 +78,7 @@ export const mediaService = {
    async getMedia(id: string){
         const media = await mediaRepository.findById(id)
         if(!media){
-            throw new Error("Media not found")
+            throw new AppError("Media not found",404)
         }
         return media
     }

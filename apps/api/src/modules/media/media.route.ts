@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { mediaService } from './media.service.js'
 import { createMediaSchema } from './media.schema.js'
+import { AppError } from '../../common/errors/app.error.js'
 
 export async function mediaRoutes(app: FastifyInstance) {
   app.post('/media', async (request, reply) => {
@@ -28,11 +29,17 @@ export async function mediaRoutes(app: FastifyInstance) {
         status: media.status
       })
     } catch (error: any) {
-      request.log.error(error)
+  request.log.error(error)
 
-      return reply.status(500).send({
-        message: 'Internal Server Error'
-      })
-    }
+  if (error instanceof AppError) {
+    return reply.status(error.statusCode).send({
+      message: error.message
+    })
+  }
+
+  return reply.status(500).send({
+    message: 'Internal Server Error'
+  })
+}
   })
 }
