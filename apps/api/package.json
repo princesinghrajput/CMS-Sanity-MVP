@@ -6,7 +6,11 @@
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "typeorm": "tsx ../../node_modules/typeorm/cli.js -d src/database/data-source.ts",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "fastify": "^5.8.5"
