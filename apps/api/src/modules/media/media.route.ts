@@ -42,4 +42,42 @@ export async function mediaRoutes(app: FastifyInstance) {
   })
 }
   })
+
+app.get('/media/:id', async (request, reply) => {
+  try {
+    const { id } = request.params as { id: string }
+
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+    if (!uuidRegex.test(id)) {
+      return reply.status(400).send({
+        message: 'Invalid media id'
+      })
+    }
+
+    const media = await mediaService.getMedia(id)
+
+    return reply.send({
+      id: media.id,
+      status: media.status,
+      originalKey: media.originalKey,
+      mimeType: media.mimeType,
+      fileSize: media.fileSize,
+      thumbnailKey: media.thumbnailKey
+    })
+  } catch (error: any) {
+    request.log.error(error)
+
+    if (error instanceof AppError) {
+      return reply.status(error.statusCode).send({
+        message: error.message
+      })
+    }
+
+    return reply.status(500).send({
+      message: 'Internal Server Error'
+    })
+  }
+})
 }
