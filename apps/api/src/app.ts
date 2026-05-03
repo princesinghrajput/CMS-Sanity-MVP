@@ -1,6 +1,7 @@
+import 'reflect-metadata'
 import Fastify from 'fastify'
 import { config } from './config/env.js'
-
+import { AppDataSource } from './database/data-source.js'
 const app = Fastify({
   logger: true
 })
@@ -17,8 +18,14 @@ app.get('/', async () => {
   return { message: 'CMS API is running' }
 })
 
+
 async function start() {
   try {
+    // connect DB first
+    await AppDataSource.initialize()
+    app.log.info('Database connected')
+
+    // then start server
     await app.listen({
       port: config.PORT,
       host: '0.0.0.0'
