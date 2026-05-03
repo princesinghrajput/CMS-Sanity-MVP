@@ -2,6 +2,8 @@ import 'reflect-metadata'
 import Fastify from 'fastify'
 import { config } from './config/env.js'
 import { AppDataSource } from './database/data-source.js'
+import { mediaRoutes } from './modules/media/media.route.js'
+
 const app = Fastify({
   logger: true
 })
@@ -24,6 +26,9 @@ async function start() {
     // connect DB first
     await AppDataSource.initialize()
     app.log.info('Database connected')
+
+    // register routes
+    await app.register(mediaRoutes);
 
     // then start server
     await app.listen({
