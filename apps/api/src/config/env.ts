@@ -10,7 +10,17 @@ const schema = z.object({
   DB_PORT: z.string().default('5432'),
   DB_USER: z.string(),
   DB_PASSWORD: z.string(),
-  DB_NAME: z.string()
+  DB_NAME: z.string(),
+
+  AWS_REGION: z.string().min(1),
+  AWS_ACCESS_KEY_ID: z.string().min(1),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1),
+  S3_BUCKET_NAME: z.string().min(1),
+  S3_UPLOAD_URL_EXPIRES_SECONDS: z.coerce.number().positive().default(900),
+  MAX_UPLOAD_SIZE_BYTES: z.coerce.number().positive().default(52_428_800),
+
+  S3_ENDPOINT: z.string().optional(),
+  S3_FORCE_PATH_STYLE: z.coerce.boolean().optional().default(false)
 })
 
 const parsed = schema.safeParse(process.env)
@@ -29,5 +39,14 @@ export const config = {
   DB_PORT: Number(env.DB_PORT),
   DB_USER: env.DB_USER,
   DB_PASSWORD: env.DB_PASSWORD,
-  DB_NAME: env.DB_NAME
+  DB_NAME: env.DB_NAME,
+
+  AWS_REGION: env.AWS_REGION,
+  AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
+  S3_BUCKET_NAME: env.S3_BUCKET_NAME,
+  S3_UPLOAD_URL_EXPIRES_SECONDS: env.S3_UPLOAD_URL_EXPIRES_SECONDS,
+  MAX_UPLOAD_SIZE_BYTES: env.MAX_UPLOAD_SIZE_BYTES,
+  S3_ENDPOINT: env.S3_ENDPOINT,
+  S3_FORCE_PATH_STYLE: env.S3_FORCE_PATH_STYLE
 }
